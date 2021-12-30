@@ -8,9 +8,8 @@
 #include "ProjectileBaseC.generated.h"
 
 class UProjectileMovementComponent;
-class UParticleSystemComponent;
 class UCapsuleComponent;
-
+class UParticleSystemComponent;
 UCLASS()
 class AProjectileBaseC : public AActor
 {
@@ -38,7 +37,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = "TurretFeatures")
 	UParticleSystem* ImpactEffect;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TurretFeatures")
+	UPROPERTY(EditdefaultsOnly, Category = "TurretFeatures")
+	TSubclassOf<UDamageType> DamageTypeK;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TurretFeatures")
 	float Damage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TurretFeatures")
@@ -49,7 +51,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	FTimerHandle DelayTimerHandle;
-	
+
 	UFUNCTION()
 	virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit);
 

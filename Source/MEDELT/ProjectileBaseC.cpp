@@ -43,6 +43,15 @@ void AProjectileBaseC::Tick(float DeltaTime)
 void AProjectileBaseC::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
 	
+	AActor* MyOwner = GetOwner();
+	if(!MyOwner)
+	{
+		return;
+	}
+	UGameplayStatics::ApplyDamage(Other, Damage, MyOwner->GetInstigatorController(), this, DamageTypeK);
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, HitLocation);
+	Destroy();
+	Other->Destroy();
 }
 
 

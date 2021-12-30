@@ -49,13 +49,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TurretFeatures", meta= (AllowPrivateAccess = "true"))
 	float FireRate=3.0f;
 
-	UFUNCTION()
-	void Fire();
+
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+	void Fire();
+	
 	float AimPitch;
 
 	float AimYaw;

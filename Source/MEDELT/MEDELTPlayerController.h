@@ -14,6 +14,11 @@ class AMEDELTPlayerController : public APlayerController
 
 public:
 	AMEDELTPlayerController();
+
+	//void Shoot();
+
+	//class ATurretBaseC* MyTurret;
+	//virtual void SetupInputComponent() override; 
 };
 
 

@@ -37,6 +37,7 @@ void ATurretBaseC::BeginPlay()
 	Super::BeginPlay();
 	AMEDELTPlayerController * MEDELTPlayerControllerRef = Cast<AMEDELTPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	BindToInput();
+	Fire();
 }
 
 // Called every frame
@@ -56,8 +57,8 @@ void ATurretBaseC::Tick(float DeltaTime)
 	UKismetMathLibrary::GetYawPitchFromVector(InVec, AimYaw, AimPitch);
 	FRotator NewWorldRotation;
 	NewWorldRotation.Roll = 0.f;
-	NewWorldRotation.Yaw = AimPitch;
-	NewWorldRotation.Pitch = AimYaw;
+	NewWorldRotation.Yaw = AimYaw;
+	NewWorldRotation.Pitch = AimPitch;
 	Arrow->SetWorldRotation(NewWorldRotation, false, false);
 }
 
@@ -67,21 +68,37 @@ void ATurretBaseC::BindToInput()
     InputComponent->RegisterComponent();
     if (InputComponent)
     {
-        // Bind inputs here
+		// Bind inputs here
         // InputComponent->BindAction("Jump", IE_Pressed, this, &AUnrealisticPawn::Jump);
         // etc...
-		InputComponent->BindAction("Fire", IE_Pressed, this, &ATurretBaseC::Fire);
         // Now hook up our InputComponent to one in a Player
         // Controller, so that input flows down to us
-        EnableInput(Cast<AMEDELTPlayerController>(GetOwner()));
+
+		InputComponent->BindAction("Shoot", IE_Pressed, this, &ATurretBaseC::Fire);
+        EnableInput(GetWorld()->GetFirstPlayerController());
     }   
 }
 
 void ATurretBaseC::Fire()
 {
-	FVector SpawnLocation = ProjectileSpawnPoint->GetComponentLocation();
-	FRotator SpawnRotation = ProjectileSpawnPoint->GetComponentRotation();
-	AProjectileBaseC* Pro = GetWorld()->SpawnActor<AProjectileBaseC>(ProjectileClass, SpawnLocation, SpawnRotation);
-	Pro->SetOwner(this); 
+	AMEDELTPlayerController * MEDELTPlayerControllerRef = Cast<AMEDELTPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if(ProjectileClass)
+	{
+		
+		FVector SpawnLocation = Arrow->GetComponentLocation();
+		FRotator SpawnRotation = Arrow->GetComponentRotation();
+		AProjectileBaseC* Pro = GetWorld()->SpawnActor<AProjectileBaseC>(ProjectileClass, SpawnLocation, SpawnRotation);
+		Pro->SetOwner(this); 
+		FHitResult Result;
+		MEDELTPlayerControllerRef->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_GameTraceChannel2), true, Result);
+
+		AActor* HomingActor = Result.GetActor();
+		if(HomingActor)
+		{
+			Pro->ProjectileMovement->HomingTargetComponent = HomingActor->GetRootComponent(); 
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("HitActor: %s"), *HomingActor->GetName()));
+		}
+	
+	}
 }
 
