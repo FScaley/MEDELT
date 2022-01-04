@@ -42,7 +42,6 @@ void AProjectileBaseC::Tick(float DeltaTime)
 
 void AProjectileBaseC::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
-	
 	AActor* MyOwner = GetOwner();
 	if(!MyOwner)
 	{

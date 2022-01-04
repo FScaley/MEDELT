@@ -10,7 +10,12 @@
 		}
 	],
 	"settings": {
-		"typescript.tsc.autoDetect": "off"
+		"typescript.tsc.autoDetect": "off",
+		"C_Cpp.default.forcedInclude": [
+			"${default}",
+			"C:\\Users\\Onur\\Desktop\\MEDELT\\Intermediate\\Build\\Win64\\UE4Editor\\Development\\MEDELT\\Definitions.MEDELT.h",
+			"C:\\Users\\Onur\\Desktop\\MEDELT\\Intermediate\\Build\\Win64\\MEDELTEditor\\Development\\Engine\\SharedPCH.Engine.ShadowErrors.h"
+		]
 	},
 	"extensions": {
 		"recommendations": [
