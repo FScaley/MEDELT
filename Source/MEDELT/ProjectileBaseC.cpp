@@ -47,11 +47,14 @@ void AProjectileBaseC::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPr
 	{
 		return;
 	}
+	CheckKelime(Other);
 	UGameplayStatics::ApplyDamage(Other, Damage, MyOwner->GetInstigatorController(), this, DamageTypeK);
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, HitLocation);
 	Destroy();
 	Other->Destroy();
 }
+
+
 
 
 

@@ -16,17 +16,20 @@ ATurretBaseC::ATurretBaseC()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	CapsuleComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule Collider")); //root dizine isim verme
-	RootComponent = CapsuleComp; //root dizini belirleme
+	CapsuleComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule Collider")); 
+	RootComponent = CapsuleComp;
 
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Base Mesh"));
 	BaseMesh->SetupAttachment(RootComponent); 
 
+	ChildMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretMesh"));
+	ChildMesh->SetupAttachment(RootComponent); 
+
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Point")); 
-	ProjectileSpawnPoint->SetupAttachment(BaseMesh); 
+	ProjectileSpawnPoint->SetupAttachment(ChildMesh); 
 
 	Arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow Component"));
-	Arrow->SetupAttachment(RootComponent);
+	Arrow->SetupAttachment(ChildMesh);
 
 	MyAimComponent = CreateDefaultSubobject<UAimComponent>(TEXT("AimComponent"));
 }
@@ -37,7 +40,6 @@ void ATurretBaseC::BeginPlay()
 	Super::BeginPlay();
 	AMEDELTPlayerController * MEDELTPlayerControllerRef = Cast<AMEDELTPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	BindToInput();
-	Fire();
 }
 
 // Called every frame
@@ -55,11 +57,19 @@ void ATurretBaseC::Tick(float DeltaTime)
 	GetWorld()->LineTraceMultiByChannel(OutHits, StartLocation, EndLocation, ECC_Visibility);
 	FVector InVec = MyAimComponent->AimLocation(WorldLocation, EndLocation) - Arrow->GetComponentLocation();
 	UKismetMathLibrary::GetYawPitchFromVector(InVec, AimYaw, AimPitch);
-	FRotator NewWorldRotation;
-	NewWorldRotation.Roll = 0.f;
-	NewWorldRotation.Yaw = AimYaw;
-	NewWorldRotation.Pitch = AimPitch;
-	Arrow->SetWorldRotation(NewWorldRotation, false, false);
+
+	FRotator NewArrowRotation;
+	NewArrowRotation.Roll = 0.f;
+	NewArrowRotation.Yaw = AimYaw;
+	NewArrowRotation.Pitch = AimPitch;
+
+	FRotator NewTopRotation;
+	NewTopRotation.Roll = 0.f;
+	NewTopRotation.Yaw = AimYaw;
+	NewTopRotation.Pitch = AimPitch - 90.0f;
+
+	Arrow->SetWorldRotation(NewArrowRotation, false, false);
+	ChildMesh->SetWorldRotation(NewTopRotation, false, false);
 }
 
 void ATurretBaseC::BindToInput()
@@ -68,12 +78,6 @@ void ATurretBaseC::BindToInput()
     InputComponent->RegisterComponent();
     if (InputComponent)
     {
-		// Bind inputs here
-        // InputComponent->BindAction("Jump", IE_Pressed, this, &AUnrealisticPawn::Jump);
-        // etc...
-        // Now hook up our InputComponent to one in a Player
-        // Controller, so that input flows down to us
-
 		InputComponent->BindAction("Shoot", IE_Pressed, this, &ATurretBaseC::Fire);
         EnableInput(GetWorld()->GetFirstPlayerController());
     }   
