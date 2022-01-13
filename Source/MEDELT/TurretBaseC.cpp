@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "TurretBaseC.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/ArrowComponent.h"
 #include "DrawDebugHelpers.h"
@@ -9,7 +10,6 @@
 #include "ProjectileBaseC.h"
 #include "AimComponent.h"
 #include "MEDELTPlayerController.h"
-#include "TurretBaseC.h"
 
 // Sets default values
 ATurretBaseC::ATurretBaseC()

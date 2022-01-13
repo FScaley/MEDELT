@@ -34,16 +34,16 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")	
 	UParticleSystemComponent* ParticleSystem;
 
-	UPROPERTY(EditAnywhere, Category = "TurretFeatures")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	UParticleSystem* ImpactEffect;
 
-	UPROPERTY(EditdefaultsOnly, Category = "TurretFeatures")
+	UPROPERTY(EditdefaultsOnly, Category = "Projectile")
 	TSubclassOf<UDamageType> DamageTypeK;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TurretFeatures")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	float Damage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TurretFeatures")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	float MovementSpeed = 1000;
 	
 protected:
@@ -61,4 +61,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void CheckKelime(AActor* HitActor);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlaySoundX();
 };

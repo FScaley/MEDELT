@@ -9,6 +9,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Particles/ParticleSystem.h"
+#include "Sound/SoundCue.h"
 
 // Sets default values
 AProjectileBaseC::AProjectileBaseC()
@@ -47,9 +48,10 @@ void AProjectileBaseC::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPr
 	{
 		return;
 	}
-	CheckKelime(Other);
-	UGameplayStatics::ApplyDamage(Other, Damage, MyOwner->GetInstigatorController(), this, DamageTypeK);
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, HitLocation);
+	PlaySoundX();
+	UGameplayStatics::ApplyDamage(Other, Damage, MyOwner->GetInstigatorController(), this, DamageTypeK);
+	CheckKelime(Other);
 	Destroy();
 	Other->Destroy();
 }
